@@ -1,8 +1,11 @@
-import { useState } from "react";
-
+import { useState, useContext } from "react";
+import { AuthContext } from '../contexts/AuthContext';
+import { useNavigate } from "react-router-dom";
 
 function LoginScreen() {
 
+    const { setAuth } = useContext(AuthContext);
+    const navigate = useNavigate();
     const [valid, setValid] = useState({email:false, password:false})
     const validForm = (jsonData) => {
         const isValid = {email:false, password:false}
@@ -31,9 +34,19 @@ function LoginScreen() {
         fetch('http://blog.api/auth/login', {
             method: "POST",
             body: JSON.stringify(jsonData)
-        }).then(resp => resp.json())
+        })
+        .then(resp => resp.json())
         .then(json => {
             console.log(json);
+            if (json.result) {
+              setAuth({role:+json.role});
+              document.cookie = `blog=${json.token};max-age=${60 * 60 * 24};`;
+              navigate('/account');
+            }
+            else{
+              setAuth({role:0});
+              document.cookie = `blog=null;max-age=0;`;
+            }
         })
     }
 

@@ -6,24 +6,41 @@ import AdminScreen from "./screens/AdminScreen";
 import HomeScreen from "./screens/HomeScreen";
 import LoginScreen from "./screens/LoginScreen";
 import UserScreen from "./screens/LoggedScreen";
+import { AuthContext } from "./contexts/AuthContext";
+import { useContext } from "react";
 
 function App() {
+
+  const { auth, setAuth } = useContext(AuthContext);
+
   return (
     <div className="container">
       <BrowserRouter>
         <div className="p-2">
           <Link to="/" className="btn btn-sm btn-primary me-2">Home</Link>
-          <Link to="/login" className="btn btn-sm btn-primary me-2">Login</Link>
-          <Link to="/admin" className="btn btn-sm btn-primary me-2">Admin</Link>
-          <Link to="/logged" className="btn btn-sm btn-primary me-2">Logged</Link>
-          <Link to="/account" className="btn btn-sm btn-primary">Account</Link>
+          {auth.role === 0 && 
+            <Link to="/login" className="btn btn-sm btn-primary me-2">Login</Link>}
+          {auth.role === 1 && 
+            <Link to="/admin" className="btn btn-sm btn-primary me-2">Admin</Link>}
+          {auth.role > 0 && 
+            <Link to="/logged" className="btn btn-sm btn-primary me-2">Logged</Link>}
+          {auth.role > 0 && 
+            <Link to="/account" className="btn btn-sm btn-primary me-2">Account</Link>}
+          {auth.role > 0 && 
+          <button className="btn btn-sm btn-secondary" 
+              onClick={e => {
+                  setAuth({role:0});
+                  document.cookie = `blog=null;max-age=0;`;
+                  window.location.href = "/login";
+                }
+              }>LOGOUT</button>}
         </div>
         <Routes>
           <Route path="/" element={<HomeScreen />} />
-          <Route path="/login" element={<LoginScreen />} />
-          <Route path="/admin" element={<AdminScreen />} />
-          <Route path="/logged" element={<UserScreen />} />
-          <Route path="/account" element={<AccountScreen />} />
+          {auth.role === 0 && <Route path="/login" element={<LoginScreen />} />}
+          {auth.role === 1 && <Route path="/admin" element={<AdminScreen />} />}
+          {auth.role > 0 && <Route path="/logged" element={<UserScreen />} />}
+          {auth.role > 0 && <Route path="/account" element={<AccountScreen />} />}
         </Routes>
       </BrowserRouter>
     </div>

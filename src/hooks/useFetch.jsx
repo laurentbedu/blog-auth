@@ -11,11 +11,11 @@ const useFetch = (endpoint, options = {}) => {
   useEffect(() => {
     
     const fetchData = async () => {
-      const url = "http://blog.api/" + endpoint;
+      const url = "http://localhost:80/blog-api/" + endpoint;
       options.credentials = "include";
-      options.headers = {
-        Authorization: getCookie("blog"),
-      };
+      // options.headers = {
+      //   Authorization: getCookie("blog"),
+      // };
       try {
         const resp = await fetch(url, options);
         const textValue = await resp.text();

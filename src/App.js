@@ -8,6 +8,7 @@ import LoginScreen from "./screens/LoginScreen";
 import UserScreen from "./screens/LoggedScreen";
 import { AuthContext } from "./contexts/AuthContext";
 import { useContext } from "react";
+import { deleteCookie } from "./helpers/cookieHelper";
 
 function App() {
 
@@ -29,8 +30,8 @@ function App() {
           {auth.role > 0 && 
           <button className="btn btn-sm btn-secondary" 
               onClick={e => {
-                  setAuth({role:0});
-                  document.cookie = `blog=null;max-age=0;`;
+                  setAuth({role:0, id:0});
+                  deleteCookie("blog");
                   window.location.href = "/login";
                 }
               }>LOGOUT</button>}

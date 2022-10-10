@@ -1,31 +1,25 @@
 import { createContext, useState, useEffect } from "react";
+import { deleteCookie, getCookie } from "../helpers/cookieHelper";
+import doFetch from "../helpers/fetchHelper";
+import useFetch from "../hooks/useFetch";
 
 const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
 
-  const getCookieValue = (name) => {
-    return document.cookie.match("(^|;)\\s*" + name + "\\s*=\\s*([^;]+)")?.pop() || "";
-  }
-
-  const [auth, setAuth] = useState({ role: 0 });
+  const [auth, setAuth] = useState({ role: 0, id: 0 });
 
   useEffect(() => {
-    fetch("http://blog.api/auth/check", {
-      // credentials: "include",
-      headers: {
-        Authorization: getCookieValue("blog"),
-      },
-    })
-      .then((resp) => resp.json())
-      .then((json) => {
-        if (json.result) {
-          setAuth({ role: +json.role });
-        } else {
-          setAuth({ role: 0 });
-          document.cookie = `blog=null;max-age=0`;
-        }
-      });
+    const check = async () => {
+      const {data} = await doFetch("auth/check");
+      if (data.result) {
+      setAuth({ role: +data.role, id:+data.id });
+    } else {
+      setAuth({ role: 0, id:0 });
+      deleteCookie("blog");
+    }
+    }
+    check()
   }, []);
 
   return (

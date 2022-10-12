@@ -6,9 +6,11 @@ import AdminScreen from "./screens/AdminScreen";
 import HomeScreen from "./screens/HomeScreen";
 import LoginScreen from "./screens/LoginScreen";
 import UserScreen from "./screens/LoggedScreen";
+import RegisterScreen from "./screens/RegisterScreen";
 import { AuthContext } from "./contexts/AuthContext";
 import { useContext } from "react";
 import { deleteCookie } from "./helpers/cookieHelper";
+
 
 function App() {
 
@@ -21,6 +23,8 @@ function App() {
           <Link to="/" className="btn btn-sm btn-primary me-2">Home</Link>
           {auth.role === 0 && 
             <Link to="/login" className="btn btn-sm btn-primary me-2">Login</Link>}
+          {auth.role === 0 && 
+            <Link to="/register" className="btn btn-sm btn-primary me-2">Register</Link>}
           {auth.role === 1 && 
             <Link to="/admin" className="btn btn-sm btn-primary me-2">Admin</Link>}
           {auth.role > 0 && 
@@ -42,6 +46,7 @@ function App() {
           {auth.role === 1 && <Route path="/admin" element={<AdminScreen />} />}
           {auth.role > 0 && <Route path="/logged" element={<UserScreen />} />}
           {auth.role > 0 && <Route path="/account" element={<AccountScreen />} />}
+          {auth.role === 0 && <Route path="/register" element={<RegisterScreen />} />}
         </Routes>
       </BrowserRouter>
     </div>

@@ -79,7 +79,7 @@ function LoginScreen() {
             id="password-input"
           />
           <i className={"text-danger" + (valid.password ? " d-none" : "")}>
-            * 6 characters including a capital letter
+            * 6 letters including a capital letter
           </i>
         </div>
 

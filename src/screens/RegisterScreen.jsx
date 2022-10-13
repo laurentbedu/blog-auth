@@ -1,13 +1,24 @@
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
+import doFetch from "../helpers/fetchHelper";
 
 export default function RegisterScreen() {
   
   const {register, handleSubmit, formState: { errors } } = useForm();
   
-  const formInvalid = () => console.log("Errors", errors);
+  const formInvalid = (errors) => console.log("Errors", errors);
 
-  const formSubmit = (data) => console.log("Validated Data", data);
+  const [msg, setMsg] = useState("");
+  const formSubmit = async (formData) => {
+
+    //console.log("Validated Data", formData);
+    const {data} = await doFetch("auth/register", {
+      method: "POST",
+      body: JSON.stringify(formData),
+    });
+    console.log(data)
+    setMsg(data.message)
+  }
   
   return (
     <>
@@ -18,7 +29,7 @@ export default function RegisterScreen() {
           <label htmlFor="pseudo-input" className="form-label">
             Pseudo <i className={"text-danger"}>{errors.pseudo ? " *" : " " }</i>
           </label>
-          <input id="pseudo-input" type="text" placeholder="pseudo"
+          <input id="pseudo-input" type="text" placeholder="pseudo" className="form-control"
                 {...register("pseudo", { required: true, minLength: 3 })} />
           <i className={"text-danger d-block"}>{errors.pseudo ? "* at least 3 chars" : " " }</i>
         </div>
@@ -27,7 +38,7 @@ export default function RegisterScreen() {
           <label htmlFor="email-input" className="form-label">
             Email <i className={"text-danger"}>{errors.email ? " *" : " " }</i>
           </label>
-          <input id="email-input" type="email" placeholder="email"
+          <input id="email-input" type="email" placeholder="email" className="form-control"
                 {...register("email", { required: true, pattern: /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/i })} />
           <i className={"text-danger d-block"}>{errors.email ? "* must be a valid email address" : " " }</i>
         </div>
@@ -36,6 +47,7 @@ export default function RegisterScreen() {
           Submit
         </button>
       </form>
+      <div className="text-primary">{msg}</div>
     </>
   );
 }

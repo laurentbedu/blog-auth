@@ -7,6 +7,7 @@ import HomeScreen from "./screens/HomeScreen";
 import LoginScreen from "./screens/LoginScreen";
 import UserScreen from "./screens/LoggedScreen";
 import RegisterScreen from "./screens/RegisterScreen";
+import AccountValidateScreen from './screens/AccountValidateScreen';
 import { AuthContext } from "./contexts/AuthContext";
 import { useContext } from "react";
 import { deleteCookie } from "./helpers/cookieHelper";
@@ -47,6 +48,7 @@ function App() {
           {auth.role > 0 && <Route path="/logged" element={<UserScreen />} />}
           {auth.role > 0 && <Route path="/account" element={<AccountScreen />} />}
           {auth.role === 0 && <Route path="/register" element={<RegisterScreen />} />}
+          {auth.role === 0 && <Route path="/account/validate/:token" element={<AccountValidateScreen />} />}
         </Routes>
       </BrowserRouter>
     </div>
